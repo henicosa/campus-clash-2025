@@ -1,0 +1,216 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Montserrat&display=swap');
+
+
+:root {
+  --clash-blue: #1a297c;
+  --clash-yellow: #fbff92;
+  --clash-teal: #00e3dc;
+  --clash-green: #cefda1;
+  --clash-red: #ff8383;
+  --clash-white: #ffffff;
+  --display-font: "DM Serif Text";
+  --interface-background: var(--clash-green);
+  --button-background: var();
+}
+
+
+
+.modal-content {
+  background-color: transparent;
+  background-color: rgba(255, 255, 255, .75);  
+  backdrop-filter: blur(8px);
+  
+}
+
+.modal-body {
+  font-weight: bold;
+}
+
+.modal {
+  background-color: transparent;
+
+}
+
+.gameboard {
+  border-color: transparent;
+}
+
+.question{
+    height:100px;
+    vertical-align: middle;
+    
+    text-align: center;
+    font-size: 1.5em;
+    padding-top: 35px;
+    color: var(--clash-yellow);
+    border-radius: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    border-color: transparent;
+}
+
+
+.question.unanswered {
+  background-color: var(--clash-blue);
+  color: var(--clash-yellow);
+  display: block;
+}
+
+.question {
+  background-color: transparent;
+  color: transparent;
+  box-shadow: none;
+}
+
+.question.unanswered:hover  {
+  /*background: linear-gradient(135deg, red, rgb(255, 181, 181));*/
+  opacity: 70%;
+}
+
+.correct {
+  background-color: #8dff8d;
+  --webkit-transition: background-color 1s;
+  transition: background-color 1s;
+}
+
+.incorrect {
+  background-color: var(--clash-red);
+  --webkit-transition: background-color 1s;
+  transition: background-color 1s;
+}
+
+.answer-button.selected {
+  border: 4px dashed var(--clash-blue);
+  padding: 36px 16px;
+}
+
+
+h1 {
+  font-family: "DM Serif Text", serif;
+}
+
+body {
+    /*background-image: url("background.png");
+    background-size: cover;
+    background-position: center;*/
+    background: conic-gradient(from 0deg, var(--clash-teal), var(--clash-green), var(--clash-teal), var(--clash-yellow), var(--clash-teal));
+    height: 100vh;
+    background-repeat: no-repeat;
+    font-family: "Montserrat", sans-serif;
+  }
+
+.button-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+    justify-items: center;
+  }
+  
+  .button-grid button {
+    width: 100%;
+    height: 50px;
+  }
+
+  .answer-button.more-text {
+    height:140px;
+  }
+
+  .answer-button {
+    display: inline-flex;
+    margin-bottom: 0;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    padding: 40px 20px;
+    font-size: 16px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  .answer-button:focus,
+  .answer-button:active:focus,
+  .answer-button.active:focus {
+    outline: thin dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+  }
+  .answer-button:hover,
+  .answer-button:focus {
+    color: #333;
+    text-decoration: none;
+  }
+  .answer-button:active,
+  .answer-button.active {
+    outline: 0;
+    background-image: none;
+    -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  }
+  .answer-button.disabled,
+  .answer-button[disabled],
+  fieldset[disabled] .answer-button {
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.65;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+
+
+
+
+  .gameboard .panel-heading h4 {
+    font-size: 1.5em;
+    font-weight: bold;
+    word-wrap: break-word;
+  }
+
+  .gameboard .panel-heading {
+    font-family: var(--body-font);
+    background-color: rgba(255, 255, 255, .8);  
+    backdrop-filter: blur(5px);
+    color: var(--clash-blue);
+    border-color: transparent;
+  }
+
+  .gameboard .panel {
+    background-color: transparent
+  }
+
+
+
+  .gameboard .panel-footer {
+    border-color: transparent;
+    background-color: rgba(255, 255, 255, .55);  
+    backdrop-filter: blur(5px);
+   
+  }
+
+  .gameboard .panel-body {
+    border-color: transparent;
+    background-color: rgba(255, 255, 255, .55);  
+    backdrop-filter: blur(5px);
+  }
+
+  #start-button {
+    border-color: transparent;
+    background-color: rgba(255, 255, 255, .55);  
+    backdrop-filter: blur(5px);
+    padding: 1em 2em;
+    font-size: 2em;
+    border-radius: 10px;
+  
+  }
+
+
+
+  .center {
+    text-align: center;
+    margin: 0 auto;
+  }

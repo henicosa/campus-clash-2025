@@ -1,0 +1,99 @@
+@import url(//fonts.googleapis.com/css?family=Libre+Baskerville:400,400italic,700);
+@import url(//fonts.googleapis.com/css?family=Source+Code+Pro:400,400italic,700,700italic);
+
+@import url(//fonts.bunny.net/css?family=hepta-slab:400,700|montserrat:400,400i,700,700i);
+@import url(//fonts.googleapis.com/css2?family=Vollkorn:wght@800&display=swap);
+
+@import url('https://fonts.googleapis.com/css2?family=Pacifico');
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap');
+/* 'IM Fell English SC' */
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&display=swap');
+
+.cover-background {
+  background-image: url("emblem.jpg");
+  background-repeat: no-repeat;
+  background-position: center; 
+}
+
+
+
+.cover {
+  margin-top: 2em;
+  text-align: center;
+  font-size: 28px;
+  padding: 0;
+  line-height: 0em;
+  position:relative;
+  margin-bottom: 1em;
+  color: var(--clash-yellow);
+  text-shadow: 4px 4px 10px var(--clash-blue);
+}
+
+.main-back, .main-front, .subtitle {
+  text-transform: uppercase;
+  font-family: var(--display-font);
+  font-weight: 600;
+  transition: opacity 0.3s ease;
+  cursor: pointer; 
+}
+
+.cover .pretitle {
+  padding-bottom: 2.7em;
+  font-family: Pacifico, cursive;
+  font-style: italic;
+  font-size: 0.8em;
+}
+
+.cover .main-front {
+  font-size: 3em;
+}
+
+/*
+.cover:hover .main-front{
+  opacity: 30%;
+}
+
+.cover:hover .main-back {
+  opacity: 100%;
+}
+*/
+
+.cover .main-back {
+  font-size: 2.2em;
+  opacity: 30%;
+}
+
+
+.cover .subtitle {
+  padding-top: 1em;
+  font-size: 2.2em;
+}
+
+/* normalize.css v3.0.0 | MIT License | git.io/normalize */
+
+/* define color scheme */
+:root {
+  --primary-light-color: #ffffff;
+  --primary-dark-color: #3a3a3a;
+  --accent-hue-base-value: 322;
+  
+}
+
+:root {
+  --accent-hue-value: var(--accent-hue-base-value);
+  --text-color: var(--primary-dark-color);
+  --background-color: var(--primary-light-color);
+  --accent-color: hsl(calc(var(--accent-hue-value)), 80%, 45%);
+  --card-color: hsl(calc(var(--accent-hue-value)), 60%, 90%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent-hue-value: calc(var(--accent-hue-base-value) - 180);
+    --text-color: var(--primary-light-color);
+    --background-color: var(--primary-dark-color);
+    --accent-color: hsl(var(--accent-hue-value), 80%, 75%);
+    --card-color: hsl(var(--accent-hue-value), 20%, 40%);
+  }
+}
+
