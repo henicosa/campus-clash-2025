@@ -140,33 +140,33 @@
         const socket = io();
 
         function updateQuestion(data) {
-            if (data.status === 'waiting') {
-                $('#waiting-screen').show();
-                $('#question-screen').hide();
+                if (data.status === 'waiting') {
+                    $('#waiting-screen').show();
+                    $('#question-screen').hide();
                 hasVoted = false;
                 // Reset vote distributions when waiting
                 resetVoteDistributions();
-            } else {
-                $('#waiting-screen').hide();
-                $('#question-screen').show();
-                $('#question-text').text(data.question);
-                
-                const answers = $('#answers');
-                answers.empty();
-                data.answers.forEach((answer, index) => {
-                    answers.append(`
+                } else {
+                    $('#waiting-screen').hide();
+                    $('#question-screen').show();
+                    $('#question-text').text(data.question);
+                    
+                    const answers = $('#answers');
+                    answers.empty();
+                    data.answers.forEach((answer, index) => {
+                        answers.append(`
                         <button class="answer-button" data-index="${index}">
                             <div class="vote-gradient" style="width: 0%"></div>
                             <div class="answer-content">
                                 ${answer.text}
                                 <div class="vote-count"></div>
                             </div>
-                        </button>
-                    `);
-                });
+                            </button>
+                        `);
+                    });
                 // Reset vote distributions for new question
                 resetVoteDistributions();
-            }
+                }
         }
 
         function resetVoteDistributions() {
@@ -180,8 +180,8 @@
         }
 
         function updateVoteDistribution(data) {
-            if (data.status === 'success') {
-                Object.entries(data.distribution).forEach(([index, percentage]) => {
+                if (data.status === 'success') {
+                    Object.entries(data.distribution).forEach(([index, percentage]) => {
                     const voteCount = Math.round((percentage / 100) * data.total_votes);
                     const button = $(`.answer-button[data-index="${index}"]`);
                     button.find('.vote-count')

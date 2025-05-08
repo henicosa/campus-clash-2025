@@ -63,7 +63,7 @@ $(function(){
                 text: voteUrl,
                 width: 128,
                 height: 128,
-                colorDark : "#000000",
+                colorDark : "#1a297c",
                 colorLight : "#ffffff",
                 errorCorrectionLevel : 'H'
             });
@@ -107,6 +107,9 @@ $(function(){
         }
 
         $.each(map[category].questions[question].answers, function(i, answer){
+            const choiceLetter = String.fromCharCode(65 + i); // A, B, C, D
+            // Remove the choice letter from the answer text if it starts with it
+            const answerText = answer.text.replace(/^[A-D][.)]\s*/, '');
             answers.append(
                 '<button class="answer-button answer' + resizeClass + '" ' +
                     'data-category="'+category+'"' +
@@ -115,11 +118,10 @@ $(function(){
                     'data-correct="'+answer.correct+'"' +
                     'data-index="'+i+'"' +
                     '>' +
+                    '<div class="answer-choice">' + choiceLetter + '</div>' +
+                    '<div class="answer-text">' + answerText + '</div>' +
                     '<div class="vote-gradient" style="width: 0%"></div>' +
-                    '<div class="answer-content">' +
-                    answer.text +
                     '<div class="vote-distribution"></div>' +
-                    '</div>' +
                     '</button>'
             )
         });
@@ -160,24 +162,37 @@ function loadBoard(){
         board.append('<div class="'+div_class+'" id="cat-'+i+'" data-category="'+i+'"></div>');
         var column = $('#cat-'+i);
         $.each(category.questions, function(n,question){
-            //add questions
-            column.append('<div class="well question unanswered" data-question="'+n+'">'+question.value+'</div>')
+            //add questions with points wrapped in a span
+            column.append('<div class="well question unanswered" data-question="'+n+'"><span class="points">'+question.value+'</span></div>')
         });
     });
     $('.panel-heading').append('<div class="clearfix"></div>')
 }
 
 function updateScore(){
-    var msg = ""
-    for (var i = 0; i < score.length; i+=1) {
-        if (round % 3 == i)
-            msg += "<b>" + score[i].name + "</b>"
-        else
-            msg += score[i].name
-        msg += ": " + score[i].score + "  "
+    const scoreElement = $('#score');
+    scoreElement.empty();
+    
+    for (let i = 0; i < score.length; i++) {
+        const isActive = round % 3 === i;
+        const teamScore = $('<div>')
+            .addClass('team-score')
+            .toggleClass('active', isActive)
+            .append(
+                $('<span>')
+                    .addClass('team-name')
+                    .text(score[i].name),
+                $('<span>')
+                    .addClass('team-points')
+                    .text(score[i].score)
+            );
+        scoreElement.append(teamScore);
     }
-
-    $('#score').empty().append(msg);
+    
+    scoreElement.addClass('score-update');
+    setTimeout(() => {
+        scoreElement.removeClass('score-update');
+    }, 500);
 }
 
 var actionInProgress = false;
@@ -231,24 +246,44 @@ function handleAnswer(){
                             setTimeout(() => {
                                 if (isCorrect) {
                                     console.log('Answer is correct! Adding points...');
-                                    playSound('correct');
+                                playSound('correct');
                                     data.correct_answers.forEach(index => {
                                         $(`.answer-button[data-index="${index}"]`).addClass('correct');
                                     });
-                                    score[round % score.length].score += parseInt(myelement.data('value'));
+                                score[round % score.length].score += parseInt(myelement.data('value'));
                                     console.log('New score:', score);
-                                } else {
+                            } else {
                                     console.log('Answer is incorrect');
-                                    playSound('wrong');
-                                    myelement.addClass('incorrect');
+                                playSound('wrong');
+                                myelement.addClass('incorrect');
                                     // Highlight all correct answers
                                     data.correct_answers.forEach(index => {
                                         $(`.answer-button[data-index="${index}"]`).addClass('correct');
                                     });
                                 }
-                            }, 4000); // Wait for gradient animation to complete
+                                
+                                // Update score and increment round
+                                round += 1;
+                                updateScore();
+                                
+                                // Close modal after showing results
+                                setTimeout(() => {
+                                    $('#question-modal').modal('hide');
+                                    // Clear QR code when modal is closed
+                                    $('#qrcode').empty();
+                                    actionInProgress = false;
+                                }, 3000);
+                            }, 4000);
                         } else {
                             console.log('Failed to get vote distribution:', data);
+                            // Handle error case
+                            round += 1;
+                            updateScore();
+                            setTimeout(() => {
+                                $('#question-modal').modal('hide');
+                                $('#qrcode').empty();
+                                actionInProgress = false;
+                            }, 3000);
                         }
                     });
                 } else {
@@ -264,29 +299,18 @@ function handleAnswer(){
                         myelement.addClass('correct');
                         score[round % score.length].score += parseInt(myelement.data('value'));
                     }
+                    
+                    // Update score and increment round
+                    round += 1;
+                    updateScore();
+                    
+                    // Close modal after showing results
+                    setTimeout(() => {
+                        $('#question-modal').modal('hide');
+                        actionInProgress = false;
+                    }, 3000);
                 }
             }, 1500);
-            
-            // wait before closing modal
-            setTimeout(function(){
-                round += 1;
-                updateScore();
-                actionInProgress = false;
-            }, 4000);
-
-            if (isInteractive) {
-                setTimeout(function(){
-                    $('#question-modal').modal('hide');
-                    // Clear QR code when modal is closed
-                    $('#qrcode').empty();
-                }, 14000);
-            } else {
-                setTimeout(function(){
-                    $('#question-modal').modal('hide');
-                    // Clear QR code when modal is closed
-                    $('#qrcode').empty();
-                }, 7000);
-            }
         }
     });
 }
@@ -299,7 +323,7 @@ function sleep(milliseconds) {
     } while (currentDate - date < milliseconds);
 }
 
-// Add styles for vote distribution
+// Add styles for vote distribution and animations
 const style = document.createElement('style');
 style.textContent = `
     .answer-button {
@@ -318,6 +342,7 @@ style.textContent = `
     .answer-content {
         position: relative;
         z-index: 2;
+        background: transparent;
     }
     .vote-distribution {
         font-size: 12px;
@@ -330,11 +355,79 @@ style.textContent = `
         opacity: 1;
     }
     .correct .vote-gradient {
-        background: linear-gradient(90deg, rgba(76, 175, 80, 0.5) 0%, rgba(76, 175, 80, 0.7) 100%);
+        background: linear-gradient(90deg, rgba(206, 253, 161, 0.8) 0%, rgba(206, 253, 161, 0.9) 100%);
+        z-index: 1;
     }
     .incorrect .vote-gradient {
-        background: linear-gradient(90deg, rgba(244, 67, 54, 0.5) 0%, rgba(244, 67, 54, 0.7) 100%);
+        background: linear-gradient(90deg, rgba(255, 131, 131, 0.8) 0%, rgba(255, 131, 131, 0.9) 100%);
+        z-index: 1;
+    }
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        transform: scale(0);
+        animation: ripple 0.6s linear;
+        pointer-events: none;
+    }
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+    .score-update {
+        animation: scoreUpdate 0.5s var(--transition-timing);
+    }
+    @keyframes scoreUpdate {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
     }
 `;
 document.head.appendChild(style);
+
+// Add animation classes when elements are added to the DOM
+document.addEventListener('DOMContentLoaded', function() {
+    // Add fade-in animation to the gameboard
+    const gameboard = document.querySelector('.gameboard');
+    if (gameboard) {
+        gameboard.classList.add('fade-in');
+    }
+
+    // Add slide-in animation to questions
+    const questions = document.querySelectorAll('.question');
+    questions.forEach((question, index) => {
+        question.style.animationDelay = `${index * 0.1}s`;
+        question.classList.add('slide-in');
+    });
+});
+
+// Handle question clicks
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('question')) {
+        const modal = document.getElementById('question-modal');
+        if (modal) {
+            modal.classList.add('fade-in');
+        }
+    }
+});
+
+// Handle answer selection
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('answer-button')) {
+        const button = e.target;
+        button.classList.add('selected');
+        
+        // Add ripple effect
+        const ripple = document.createElement('div');
+        ripple.classList.add('ripple');
+        button.appendChild(ripple);
+        
+        // Remove ripple after animation
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    }
+});
   
