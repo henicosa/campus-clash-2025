@@ -1,12 +1,14 @@
 <!doctype html>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
-    <link rel="stylesheet" type="text/css" href="css/title.css">
+	<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <link rel="stylesheet" type="text/css" href="/css/title.css">
 	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-	<script src="js/scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+	<script src="/js/scripts.js"></script>
 
 </head>
 <body>
@@ -19,7 +21,7 @@
       </div>
     </div -->
         <div>
-          <img src="logo.png" class="img-responsive" style="width: 150px; margin: 20px auto;" alt="Digitalchangemaker Campus Clash">
+          <img src="/logo.png" class="img-responsive" style="width: 150px; margin: 20px auto;" alt="Digitalchangemaker Campus Clash">
         </div>
    
         <div class="panel panel-default">
@@ -40,7 +42,17 @@
         <h4 class="modal-title">Modal title</h4>
       </div>
       <div class="modal-body">
-        <p id="question" style="font-size: 1.5em">One fine body&hellip;</p>
+        <div class="row">
+            <div class="col-md-8">
+                <p id="question" style="font-size: 1.5em">One fine body&hellip;</p>
+            </div>
+            <div class="col-md-4">
+                <div id="qr-container" style="display: none;">
+                    <div id="qrcode"></div>
+                    <p class="text-center">Scan to vote!</p>
+                </div>
+            </div>
+        </div>
       </div>
       <div class="modal-footer ">
         <div id="answers" class="text-center button-grid">

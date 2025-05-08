@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Campus Clash - Audience Vote</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        body {
+            padding: 15px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 100%;
+            padding: 0;
+        }
+        .waiting-screen {
+            text-align: center;
+            padding: 20px;
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        .answer-button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 15px;
+            font-size: 16px;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .answer-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .answer-button.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .answer-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .vote-count {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px;
+            position: relative;
+            z-index: 2;
+        }
+        .selected .vote-count {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .voted-confirmation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            left: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            animation: fadeOut 2s forwards;
+            animation-delay: 1s;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .vote-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #e3f2fd 0%, #bbdefb 100%);
+            transition: width 0.5s ease-out;
+            z-index: 1;
+        }
+        .answer-content {
+            position: relative;
+            z-index: 2;
+            padding: 5px 0;
+        }
+        #question-text {
+            font-size: 20px;
+            margin: 20px 0;
+            padding: 0 10px;
+            line-height: 1.4;
+        }
+        @media (max-width: 480px) {
+            .answer-button {
+                padding: 12px;
+                font-size: 15px;
+                margin: 8px 0;
+            }
+            .vote-count {
+                font-size: 13px;
+            }
+            #question-text {
+                font-size: 18px;
+            }
+            .waiting-screen {
+                font-size: 18px;
+                padding: 15px;
+            }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="waiting-screen" class="waiting-screen">
+            <h2>Waiting for an interactive question...</h2>
+        </div>
+        <div id="question-screen" style="display: none;">
+            <h2 id="question-text" class="text-center"></h2>
+            <div id="answers" class="col-md-8 col-md-offset-2">
+            </div>
+        </div>
+        <div id="voted-confirmation" class="voted-confirmation">
+            Vote submitted successfully!
+        </div>
+    </div>
+
+    <script>
+        let hasVoted = false;
+        const socket = io();
+
+        function updateQuestion(data) {
+            if (data.status === 'waiting') {
+                $('#waiting-screen').show();
+                $('#question-screen').hide();
+                hasVoted = false;
+                // Reset vote distributions when waiting
+                resetVoteDistributions();
+            } else {
+                $('#waiting-screen').hide();
+                $('#question-screen').show();
+                $('#question-text').text(data.question);
+                
+                const answers = $('#answers');
+                answers.empty();
+                data.answers.forEach((answer, index) => {
+                    answers.append(`
+                        <button class="answer-button" data-index="${index}">
+                            <div class="vote-gradient" style="width: 0%"></div>
+                            <div class="answer-content">
+                                ${answer.text}
+                                <div class="vote-count"></div>
+                            </div>
+                        </button>
+                    `);
+                });
+                // Reset vote distributions for new question
+                resetVoteDistributions();
+            }
+        }
+
+        function resetVoteDistributions() {
+            $('.answer-button').each(function() {
+                $(this).find('.vote-gradient').css('width', '0%');
+                $(this).find('.vote-count').text('');
+                $(this).removeClass('selected');
+                $(this).prop('disabled', false);
+            });
+            hasVoted = false;
+        }
+
+        function updateVoteDistribution(data) {
+            if (data.status === 'success') {
+                Object.entries(data.distribution).forEach(([index, percentage]) => {
+                    const voteCount = Math.round((percentage / 100) * data.total_votes);
+                    const button = $(`.answer-button[data-index="${index}"]`);
+                    button.find('.vote-count')
+                        .text(`${voteCount} votes (${percentage.toFixed(1)}%)`);
+                    button.find('.vote-gradient')
+                        .css('width', `${percentage}%`);
+                });
+            }
+        }
+
+        function showVotedConfirmation() {
+            const confirmation = $('#voted-confirmation');
+            confirmation.css('display', 'block');
+            confirmation.css('opacity', '1');
+            setTimeout(() => {
+                confirmation.css('display', 'none');
+            }, 3000);
+        }
+
+        $(document).ready(function() {
+            // Request initial question
+            socket.emit('get_question');
+            
+            // Listen for question updates
+            socket.on('question_update', updateQuestion);
+            
+            // Listen for vote distribution updates
+            socket.on('vote_distribution', updateVoteDistribution);
+
+            // Handle vote submission
+            $(document).on('click', '.answer-button', function() {
+                if (hasVoted) return;
+                
+                const button = $(this);
+                const index = button.data('index');
+                
+                // Disable all buttons
+                $('.answer-button').prop('disabled', true);
+                
+                // Highlight selected answer
+                button.addClass('selected');
+                
+                // Send vote through WebSocket
+                socket.emit('submit_vote', { answer_index: index }, function(response) {
+                    if (response.status === 'success') {
+                        hasVoted = true;
+                        showVotedConfirmation();
+                    } else {
+                        // Re-enable buttons if vote failed
+                        $('.answer-button').prop('disabled', false);
+                        button.removeClass('selected');
+                        alert('Failed to submit vote. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

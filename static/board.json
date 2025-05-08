@@ -5,6 +5,7 @@
             {
                 "value": 10,
                 "question": "Wie viel Prozent der Studierenden sind verheiratet?",
+                "interactive": true,
                 "answers": [
                     {
                         "text": "A) 5,5 %",
@@ -16,7 +17,7 @@
                     },
                     {
                         "text": "C) 9,8 %",
-                        "correct": true
+                        "correct": false
                     },
                     {
                         "text": "D) 13,2 %",
@@ -123,7 +124,7 @@
             "question": "Welche Seminarbezeichnung ist nicht frei erfunden?",
             "answers": [
                 {
-                    "text": "A) “Die platte Lust : mein Herr : ist nicht des Faustens Sache\": Goethes literarisches Lieben und Leben",
+                    "text": "A) 'Die platte Lust : mein Herr : ist nicht des Faustens Sache': Goethes literarisches Lieben und Leben",
                     "correct": false
                 },
                 {
@@ -135,7 +136,7 @@
                     "correct": true
                 },
                 {
-                    "text": "D) She’s the Man: Die subversive Darstellung von Geschlecht in Coming-of-Age-Komödien der frühen 2000er",
+                    "text": "D) She's the Man: Die subversive Darstellung von Geschlecht in Coming-of-Age-Komödien der frühen 2000er",
                     "correct": false
                 }
             ]
@@ -148,6 +149,7 @@
         {
             "value": 10,
             "question": "Wie viele der Studierende nutzen durchschnittlich die Mensa mindestens einmal in der Woche?",
+            "interactive": true,
             "answers": [
                 {
                     "text": "A) 54,4 %",
@@ -170,6 +172,7 @@
         {
             "value": 20,
             "question": "Welche Universität hatte einen eigenen Online-Burgergenerator, in dem man seinen eigenen Burger zusammenstellen konnte?",
+            "interactive": true,
             "answers": [
                 {
                     "text": "A) Universität der Künste Berlin",
@@ -206,7 +209,7 @@
                     "correct": false
                 },
                 {
-                    "text": "D) Shepherd’s Pie aus Sonnenblumenhack, dazu Karottensalat mit Haselnüssen und Orangenmarinade",
+                    "text": "D) Shepherd's Pie aus Sonnenblumenhack, dazu Karottensalat mit Haselnüssen und Orangenmarinade",
                     "correct": true
                 }
             ]
