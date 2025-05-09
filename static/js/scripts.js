@@ -9,6 +9,10 @@ const sounds = {
 // Initialize socket connection
 const socket = io();
 
+// Global variables for animation tracking
+let currentTypingTimeout = null;
+let currentAnswerTypingTimeout = null;
+
 // Function to play sounds
 function playSound(soundName) {
     if (sounds[soundName]) {
@@ -32,6 +36,7 @@ $(function(){
         url:'/api/board',
         success:function(data){
             map = data;
+            console.log("Loaded board data:", map);
             loadBoard();
             // Get initial board state
             updateBoardState();
@@ -73,22 +78,161 @@ $(function(){
     });
 
     $('.unanswered').click(function(){
+        // Clear any existing animations
+        if (currentTypingTimeout) {
+            clearTimeout(currentTypingTimeout);
+            currentTypingTimeout = null;
+        }
+        if (currentAnswerTypingTimeout) {
+            clearTimeout(currentAnswerTypingTimeout);
+            currentAnswerTypingTimeout = null;
+        }
+
         playSound('click');
         var category = $(this).parent().data('category');
         var question = $(this).data('question');
+        console.log("Category:", category, "Question:", question);
+        console.log("Question data:", map[category].questions[question]);
         var value = map[category].questions[question].value;
         var answers = $('#answers');
         resizeClass = " more-text"
         $('.modal-title').empty().text(map[category].name);
-        $('#question').empty().text(map[category].questions[question].question);
+        
+        // Get question types
+        const types = map[category].questions[question].types || [];
+        console.log("Types from question:", types);
+        const questionText = map[category].questions[question].question;
+        
+        // Clear answers container before any question type
         answers.empty();
+        
+        if (types.includes('ai')) {
+            // Create AI question element
+            const questionElement = $('<p>')
+                .attr('id', 'question')
+                .addClass('ai-question');
+            
+            // Clear and add the question element
+            $('#question').replaceWith(questionElement);
+            
+            // Add cursor element
+            const cursor = $('<span>').addClass('cursor');
+            questionElement.append(cursor);
+            
+            // Start typing animation
+            let currentText = '';
+            const text = questionText;
+            const typingSpeed = 50; // milliseconds per character
+            
+            function typeNextChar() {
+                if (currentText.length < text.length) {
+                    currentText += text[currentText.length];
+                    questionElement.text(currentText);
+                    questionElement.append(cursor);
+                    currentTypingTimeout = setTimeout(typeNextChar, typingSpeed);
+                } else {
+                    // Remove cursor when done
+                    cursor.remove();
+                    // Start typing answers after question is done
+                    typeAnswers();
+                }
+            }
+            
+            // Start typing after a short delay
+            currentTypingTimeout = setTimeout(typeNextChar, 100);
 
+            // Function to type out answers
+            function typeAnswers() {
+                let currentAnswerIndex = 0;
+                let currentAnswerText = '';
+                
+                function typeNextAnswer() {
+                    if (currentAnswerIndex < map[category].questions[question].answers.length) {
+                        const answer = map[category].questions[question].answers[currentAnswerIndex];
+                        const choiceLetter = String.fromCharCode(65 + currentAnswerIndex);
+                        const answerText = answer.text.replace(/^[A-D][.)]\s*/, '');
+                        
+                        // Create answer button
+                        const answerButton = $('<button>')
+                            .addClass('answer-button answer' + resizeClass)
+                            .attr({
+                                'data-category': category,
+                                'data-question': question,
+                                'data-value': value,
+                                'data-correct': answer.correct,
+                                'data-index': currentAnswerIndex
+                            })
+                            .append(
+                                $('<div>').addClass('answer-choice').text(choiceLetter),
+                                $('<div>').addClass('answer-text').text(''),
+                                $('<div>').addClass('vote-gradient').css('width', '0%'),
+                                $('<div>').addClass('vote-distribution')
+                            );
+                        
+                        answers.append(answerButton);
+                        
+                        function typeAnswerText() {
+                            const answerElement = answerButton.find('.answer-text');
+                            if (currentAnswerText.length < answerText.length) {
+                                currentAnswerText += answerText[currentAnswerText.length];
+                                answerElement.text(currentAnswerText);
+                                currentAnswerTypingTimeout = setTimeout(typeAnswerText, typingSpeed);
+                            } else {
+                                currentAnswerIndex++;
+                                currentAnswerText = '';
+                                currentAnswerTypingTimeout = setTimeout(typeNextAnswer, 500); // Delay between answers
+                            }
+                        }
+                        
+                        currentAnswerTypingTimeout = setTimeout(typeAnswerText, 100);
+                    }
+                }
+                
+                typeNextAnswer();
+            }
+
+            // Clean up animation when modal is closed
+            $('#question-modal').on('hidden.bs.modal', function() {
+                if (currentTypingTimeout) {
+                    clearTimeout(currentTypingTimeout);
+                    currentTypingTimeout = null;
+                }
+                if (currentAnswerTypingTimeout) {
+                    clearTimeout(currentAnswerTypingTimeout);
+                    currentAnswerTypingTimeout = null;
+                }
+                // Remove the event listener to prevent memory leaks
+                $(this).off('hidden.bs.modal');
+            });
+        } else {
+            // Regular question
+            $('#question').empty().text(questionText);
+            // Add answers immediately for non-AI questions
+            $.each(map[category].questions[question].answers, function(i, answer){
+                const choiceLetter = String.fromCharCode(65 + i);
+                const answerText = answer.text.replace(/^[A-D][.)]\s*/, '');
+                answers.append(
+                    '<button class="answer-button answer' + resizeClass + '" ' +
+                        'data-category="'+category+'"' +
+                        'data-question="'+question+'"' +
+                        'data-value="'+value+'"' +
+                        'data-correct="'+answer.correct+'"' +
+                        'data-index="'+i+'"' +
+                        '>' +
+                        '<div class="answer-choice">' + choiceLetter + '</div>' +
+                        '<div class="answer-text">' + answerText + '</div>' +
+                        '<div class="vote-gradient" style="width: 0%"></div>' +
+                        '<div class="vote-distribution"></div>' +
+                        '</button>'
+                )
+            });
+        }
+        
         // Clear previous QR code
         $('#qrcode').empty();
 
         // Check if this is an interactive question
-        const isInteractive = map[category].questions[question].interactive;
-        if (isInteractive) {
+        if (types.includes('interactive')) {
             // Show QR code
             $('#qr-container').show();
             const voteUrl = `${window.location.origin}/vote`;
@@ -107,8 +251,8 @@ $(function(){
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
-                    interactive: true,
-                    question: map[category].questions[question].question,
+                    types: types,
+                    question: questionText,
                     answers: map[category].questions[question].answers
                 }),
                 success: function(response) {
@@ -129,7 +273,7 @@ $(function(){
                 url: '/api/set_question',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({ interactive: false }),
+                data: JSON.stringify({ types: [] }),
                 success: function(response) {
                     console.log('Question cleared successfully');
                 },
@@ -138,26 +282,6 @@ $(function(){
                 }
             });
         }
-
-        $.each(map[category].questions[question].answers, function(i, answer){
-            const choiceLetter = String.fromCharCode(65 + i); // A, B, C, D
-            // Remove the choice letter from the answer text if it starts with it
-            const answerText = answer.text.replace(/^[A-D][.)]\s*/, '');
-            answers.append(
-                '<button class="answer-button answer' + resizeClass + '" ' +
-                    'data-category="'+category+'"' +
-                    'data-question="'+question+'"' +
-                    'data-value="'+value+'"' +
-                    'data-correct="'+answer.correct+'"' +
-                    'data-index="'+i+'"' +
-                    '>' +
-                    '<div class="answer-choice">' + choiceLetter + '</div>' +
-                    '<div class="answer-text">' + answerText + '</div>' +
-                    '<div class="vote-gradient" style="width: 0%"></div>' +
-                    '<div class="vote-distribution"></div>' +
-                    '</button>'
-            )
-        });
         
         $('#question-modal').modal('show');
         console.log(category, question);
@@ -279,8 +403,10 @@ function handleAnswer(){
             $(this).addClass('selected');
            
             setTimeout(function(){
-                // Check if this is an interactive question
-                const isInteractive = map[category].questions[question].interactive;
+                // Get question types
+                const types = map[category].questions[question].types || [];
+                const isInteractive = types.includes('interactive');
+                console.log(types);
                 
                 if (isInteractive) {
                     // Get vote distribution through WebSocket
@@ -314,16 +440,16 @@ function handleAnswer(){
                             setTimeout(() => {
                                 if (isCorrect) {
                                     console.log('Answer is correct! Adding points...');
-                                playSound('correct');
+                                    playSound('correct');
                                     data.correct_answers.forEach(index => {
                                         $(`.answer-button[data-index="${index}"]`).addClass('correct');
                                     });
-                                score[round % score.length].score += parseInt(myelement.data('value'));
+                                    score[round % score.length].score += parseInt(myelement.data('value'));
                                     console.log('New score:', score);
-                            } else {
+                                } else {
                                     console.log('Answer is incorrect');
-                                playSound('wrong');
-                                myelement.addClass('incorrect');
+                                    playSound('wrong');
+                                    myelement.addClass('incorrect');
                                     // Highlight all correct answers
                                     data.correct_answers.forEach(index => {
                                         $(`.answer-button[data-index="${index}"]`).addClass('correct');

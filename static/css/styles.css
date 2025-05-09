@@ -629,3 +629,38 @@ body {
 .logo-reset {
     animation: logoReset 0.5s var(--transition-timing);
 }
+
+/* AI Question typing animation */
+@keyframes typing {
+    from { 
+        width: 0;
+        border-right: 3px solid var(--clash-blue);
+    }
+    to { 
+        width: 100%;
+        border-right: 3px solid var(--clash-blue);
+    }
+}
+
+@keyframes blink {
+    50% { border-color: transparent }
+}
+
+.ai-question {
+    margin: 0 auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.ai-question .cursor {
+    display: inline-block;
+    width: 3px;
+    height: 1em;
+    background-color: var(--clash-blue);
+    margin-left: 2px;
+    animation: blink 0.75s step-end infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}

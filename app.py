@@ -143,7 +143,7 @@ def handle_get_vote_distribution():
 def set_question():
     global current_question, votes
     data = request.json
-    if data.get('interactive'):
+    if data.get('types') and 'interactive' in data.get('types'):
         current_question = data
         votes = defaultdict(int)
         # Broadcast new question to all clients
