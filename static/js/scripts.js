@@ -430,4 +430,32 @@ document.addEventListener('click', function(e) {
         }, 600);
     }
 });
+
+// Listen for emoji broadcasts from server
+socket.on('emote_broadcast', (data) => {
+    console.log('Gameboard received emoji:', data.emoji);
+    // Create floating emoji animation
+    createFloatingEmoji(data.emoji);
+});
+
+// Create floating emoji animation
+function createFloatingEmoji(emoji) {
+    const emojiElement = document.createElement('div');
+    emojiElement.className = 'floating-emoji';
+    emojiElement.textContent = emoji;
+    
+    // Random position across the screen
+    const x = Math.random() * (window.innerWidth - 100);
+    const y = Math.random() * (window.innerHeight - 100);
+    
+    emojiElement.style.left = `${x}px`;
+    emojiElement.style.top = `${y}px`;
+    
+    document.body.appendChild(emojiElement);
+    
+    // Remove element after animation
+    setTimeout(() => {
+        emojiElement.remove();
+    }, 1500);
+}
   

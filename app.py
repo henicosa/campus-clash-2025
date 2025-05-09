@@ -128,6 +128,12 @@ def set_question():
     socketio.emit('question_update', {"status": "waiting"})
     return jsonify({"status": "success"})
 
+@socketio.on('emote')
+def handle_emote(data):
+    print(f"Received emoji: {data['emoji']}")
+    # Broadcast the emoji to all clients
+    socketio.emit('emote_broadcast', data)
+
 def signal_handler(sig, frame):
     print('Shutting down gracefully...')
     sys.exit(0)

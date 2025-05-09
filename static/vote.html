@@ -9,6 +9,7 @@
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="/js/vote.js"></script>
     <style>
         body {
             padding: 15px;
@@ -135,109 +136,15 @@
         </div>
     </div>
 
-    <script>
-        let hasVoted = false;
-        const socket = io();
-
-        function updateQuestion(data) {
-                if (data.status === 'waiting') {
-                    $('#waiting-screen').show();
-                    $('#question-screen').hide();
-                hasVoted = false;
-                // Reset vote distributions when waiting
-                resetVoteDistributions();
-                } else {
-                    $('#waiting-screen').hide();
-                    $('#question-screen').show();
-                    $('#question-text').text(data.question);
-                    
-                    const answers = $('#answers');
-                    answers.empty();
-                    data.answers.forEach((answer, index) => {
-                        answers.append(`
-                        <button class="answer-button" data-index="${index}">
-                            <div class="vote-gradient" style="width: 0%"></div>
-                            <div class="answer-content">
-                                ${answer.text}
-                                <div class="vote-count"></div>
-                            </div>
-                            </button>
-                        `);
-                    });
-                // Reset vote distributions for new question
-                resetVoteDistributions();
-                }
-        }
-
-        function resetVoteDistributions() {
-            $('.answer-button').each(function() {
-                $(this).find('.vote-gradient').css('width', '0%');
-                $(this).find('.vote-count').text('');
-                $(this).removeClass('selected');
-                $(this).prop('disabled', false);
-            });
-            hasVoted = false;
-        }
-
-        function updateVoteDistribution(data) {
-                if (data.status === 'success') {
-                    Object.entries(data.distribution).forEach(([index, percentage]) => {
-                    const voteCount = Math.round((percentage / 100) * data.total_votes);
-                    const button = $(`.answer-button[data-index="${index}"]`);
-                    button.find('.vote-count')
-                        .text(`${voteCount} votes (${percentage.toFixed(1)}%)`);
-                    button.find('.vote-gradient')
-                        .css('width', `${percentage}%`);
-                });
-            }
-        }
-
-        function showVotedConfirmation() {
-            const confirmation = $('#voted-confirmation');
-            confirmation.css('display', 'block');
-            confirmation.css('opacity', '1');
-            setTimeout(() => {
-                confirmation.css('display', 'none');
-            }, 3000);
-        }
-
-        $(document).ready(function() {
-            // Request initial question
-            socket.emit('get_question');
-            
-            // Listen for question updates
-            socket.on('question_update', updateQuestion);
-            
-            // Listen for vote distribution updates
-            socket.on('vote_distribution', updateVoteDistribution);
-
-            // Handle vote submission
-            $(document).on('click', '.answer-button', function() {
-                if (hasVoted) return;
-                
-                const button = $(this);
-                const index = button.data('index');
-                
-                // Disable all buttons
-                $('.answer-button').prop('disabled', true);
-                
-                // Highlight selected answer
-                button.addClass('selected');
-                
-                // Send vote through WebSocket
-                socket.emit('submit_vote', { answer_index: index }, function(response) {
-                    if (response.status === 'success') {
-                        hasVoted = true;
-                        showVotedConfirmation();
-                    } else {
-                        // Re-enable buttons if vote failed
-                        $('.answer-button').prop('disabled', false);
-                        button.removeClass('selected');
-                        alert('Failed to submit vote. Please try again.');
-                    }
-                });
-            });
-        });
-    </script>
+    <div class="row emoji-container">
+        <div class="col-md-12">
+            <div class="emoji-buttons">
+                <button class="emoji-button" data-emoji="🎉">🎉</button>
+                <button class="emoji-button" data-emoji="👏">👏</button>
+                <button class="emoji-button" data-emoji="💪">💪</button>
+                <button class="emoji-button" data-emoji="🔥">🔥</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html> 
