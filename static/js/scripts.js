@@ -134,9 +134,9 @@ $(function(){
 
 });
 
-var score = [{name: "Team A", score: 0},
-                {name: "Team B", score: 0},
-                {name: "Team C", score: 0}]
+var score = [{name: "Team 🏛️", score: 0},
+                {name: "Team 🪩", score: 0},
+                {name: "Team 🎓", score: 0}]
 var round = 0;
 var map;
 

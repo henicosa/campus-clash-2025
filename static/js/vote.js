@@ -86,6 +86,25 @@ function createFloatingEmoji(emoji, sourceButton) {
     }, 1500);
 }
 
+function handleEmojiClick(emoji) {
+    const button = document.querySelector(`.emoji-button[data-emoji="${emoji}"]`);
+    if (button.classList.contains('cooldown')) return;
+
+    // Add cooldown class
+    button.classList.add('cooldown');
+    
+    // Send emoji
+    socket.emit('emote', { emoji: emoji });
+    
+    // Create floating emoji animation
+    createFloatingEmoji(emoji, button);
+    
+    // Remove cooldown class after animation
+    setTimeout(() => {
+        button.classList.remove('cooldown');
+    }, 1500);
+}
+
 // Event handlers
 $(document).ready(function() {
     // Request initial question
@@ -128,12 +147,7 @@ $(document).ready(function() {
     document.querySelectorAll('.emoji-button').forEach(button => {
         button.addEventListener('click', () => {
             const emoji = button.dataset.emoji;
-            
-            // Send emoji to server
-            socket.emit('emote', { emoji });
-            
-            // Create floating emoji animation
-            createFloatingEmoji(emoji, button);
+            handleEmojiClick(emoji);
         });
     });
 });

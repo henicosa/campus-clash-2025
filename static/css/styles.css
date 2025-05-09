@@ -533,7 +533,7 @@ body {
 .emoji-buttons {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 1em;
   padding: 1rem;
 }
 
@@ -551,6 +551,35 @@ body {
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow-sm);
+  position: relative;
+}
+
+.emoji-button.cooldown {
+  cursor: not-allowed;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.emoji-button.cooldown::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid var(--clash-yellow);
+  border-top-color: transparent;
+  animation: cooldown 1.5s linear forwards;
+}
+
+@keyframes cooldown {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .emoji-button:hover {
