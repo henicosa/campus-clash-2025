@@ -33,12 +33,45 @@ $(function(){
         success:function(data){
             map = data;
             loadBoard();
+            // Get initial board state
+            updateBoardState();
         },
         error: function(xhr, status, error) {
             console.error('Error loading board data:', error);
             alert('Error loading game board. Please refresh the page.');
         }
     });
+
+    // Add logo click handler
+    $('.img-responsive').click(function() {
+        if (confirm('Are you sure you want to reset the game?')) {
+            // Add reset animation
+            const logo = $(this);
+            logo.addClass('logo-reset');
+            
+            // Remove animation class after it completes
+            setTimeout(() => {
+                logo.removeClass('logo-reset');
+            }, 500);
+
+            $.ajax({
+                url: '/api/reset',
+                type: 'POST',
+                success: function(response) {
+                    console.log('Game reset successfully');
+                    // Force page refresh after a short delay to show the animation
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 600);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error resetting game:', error);
+                    alert('Error resetting game. Please try again.');
+                }
+            });
+        }
+    });
+
     $('.unanswered').click(function(){
         playSound('click');
         var category = $(this).parent().data('category');
@@ -197,12 +230,49 @@ function updateScore(){
 
 var actionInProgress = false;
 
+function updateBoardState() {
+    $.ajax({
+        type: 'GET',
+        url: '/api/board_state',
+        success: function(data) {
+            // Update team scores
+            data.team_scores.forEach((score, index) => {
+                $(`.team-score:nth-child(${index + 1}) .team-points`).text(score);
+            });
+            
+            // Update active team
+            $('.team-score').removeClass('active');
+            $(`.team-score:nth-child(${data.active_team + 1})`).addClass('active');
+            
+            // Update answered questions
+            data.answered_questions.forEach(questionId => {
+                const [categoryIdx, questionIdx] = questionId.split('_');
+                $(`#cat-${categoryIdx} [data-question="${questionIdx}"]`)
+                    .removeClass('unanswered')
+                    .empty()
+                    .css('cursor', 'not-allowed');
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error('Error loading board state:', error);
+        }
+    });
+}
+
+// Listen for board state updates
+socket.on('board_state_update', function(data) {
+    updateBoardState();
+});
+
 function handleAnswer(){
     $('.answer').click(function(){
         if (!actionInProgress) {
             actionInProgress = true;
             playSound('click');
-            var tile= $('div[data-category="'+$(this).data('category')+'"]>[data-question="'+$(this).data('question')+'"]')[0];
+            var category = $(this).data('category');
+            var question = $(this).data('question');
+            var questionId = map[category].questions[question].id;
+            var tile = $(`#cat-${category} [data-question="${question}"]`)[0];
             $(tile).empty().removeClass('unanswered').unbind().css('cursor','not-allowed');
 
             var myelement = $(this);
@@ -210,10 +280,8 @@ function handleAnswer(){
            
             setTimeout(function(){
                 // Check if this is an interactive question
-                const category = myelement.data('category');
-                const question = myelement.data('question');
                 const isInteractive = map[category].questions[question].interactive;
-
+                
                 if (isInteractive) {
                     // Get vote distribution through WebSocket
                     console.log('Getting vote distribution for interactive question...');
@@ -266,6 +334,13 @@ function handleAnswer(){
                                 round += 1;
                                 updateScore();
                                 
+                                // Send answer to server
+                                socket.emit('answer_question', {
+                                    question_id: questionId,
+                                    is_correct: isCorrect,
+                                    points: parseInt(myelement.data('value'))
+                                });
+                                
                                 // Close modal after showing results
                                 setTimeout(() => {
                                     $('#question-modal').modal('hide');
@@ -288,21 +363,24 @@ function handleAnswer(){
                     });
                 } else {
                     // Regular question handling
-                    if (myelement.data('correct') == false){
+                    const isCorrect = myelement.data('correct');
+                    if (!isCorrect) {
                         playSound('wrong');
                         myelement.addClass('incorrect');
                         var correct = myelement.siblings('[data-correct="true"]');
                         correct.addClass('correct').css('cursor','not-allowed');
                     }
-                    if (myelement.data('correct')){
+                    if (isCorrect) {
                         playSound('correct');
                         myelement.addClass('correct');
-                        score[round % score.length].score += parseInt(myelement.data('value'));
                     }
                     
-                    // Update score and increment round
-                    round += 1;
-                    updateScore();
+                    // Send answer to server
+                    socket.emit('answer_question', {
+                        question_id: questionId,
+                        is_correct: isCorrect,
+                        points: parseInt(myelement.data('value'))
+                    });
                     
                     // Close modal after showing results
                     setTimeout(() => {

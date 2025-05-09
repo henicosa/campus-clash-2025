@@ -18,30 +18,56 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Store the current active question and votes
 current_question = None
 votes = defaultdict(int)
+answered_questions = set()  # Store answered question IDs
+active_team = 0  # 0: students, 1: university, 2: forum
+team_scores = [0, 0, 0]  # Scores for each team
+
+def reset_game_state():
+    global current_question, votes, answered_questions, active_team, team_scores
+    current_question = None
+    votes = defaultdict(int)
+    answered_questions = set()
+    active_team = 0
+    team_scores = [0, 0, 0]
 
 # Load the board data on startup
 def load_board_data():
     board_path = os.path.join(STATIC_DIR, 'board.json')
     try:
         with open(board_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
+            board = json.load(f)
+            # Add IDs to questions
+            for category_idx, category in enumerate(board):
+                for question_idx, question in enumerate(category['questions']):
+                    question['id'] = f"{category_idx}_{question_idx}"
+            return board
     except Exception as e:
         print(f"Error loading board.json: {e}")
         return []
 
 board_data = load_board_data()
 
-@app.route('/')
+@app.route('/control-panel-2025')
 def serve_gameboard():
     return send_from_directory(STATIC_DIR, 'gameboard.html')
 
+
+@app.route('/')
 @app.route('/vote')
 def serve_vote():
     return send_from_directory(STATIC_DIR, 'vote.html')
 
-@app.route('/api/board')
+@app.route('/api/board', methods=['GET'])
 def get_board():
     return jsonify(board_data)
+
+@app.route('/api/board_state', methods=['GET'])
+def get_board_state():
+    return jsonify({
+        'active_team': active_team,
+        'team_scores': team_scores,
+        'answered_questions': list(answered_questions)
+    })
 
 @app.route('/api/current_question', methods=['GET'])
 def get_current_question():
@@ -133,6 +159,34 @@ def handle_emote(data):
     print(f"Received emoji: {data['emoji']}")
     # Broadcast the emoji to all clients
     socketio.emit('emote_broadcast', data)
+
+@socketio.on('answer_question')
+def handle_answer(data):
+    global active_team, team_scores, answered_questions
+    question_id = data.get('question_id')
+    is_correct = data.get('is_correct')
+    points = data.get('points', 0)
+    
+    if question_id not in answered_questions:
+        answered_questions.add(question_id)
+        if is_correct:
+            team_scores[active_team] += points
+        active_team = (active_team + 1) % 3
+        socketio.emit('board_state_update', {
+            'active_team': active_team,
+            'team_scores': team_scores,
+            'answered_questions': list(answered_questions)
+        })
+
+@app.route('/api/reset', methods=['POST'])
+def reset_game():
+    reset_game_state()
+    socketio.emit('board_state_update', {
+        'active_team': active_team,
+        'team_scores': team_scores,
+        'answered_questions': list(answered_questions)
+    })
+    return jsonify({"status": "success"})
 
 def signal_handler(sig, frame):
     print('Shutting down gracefully...')

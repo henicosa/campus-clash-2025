@@ -115,15 +115,15 @@
 
 .question {
   height: var(--question-height);
-  vertical-align: middle;
-  text-align: center;
+    vertical-align: middle;
+    text-align: center;
   font-size: var(--font-size-large);
   padding-top: var(--spacing-lg);
-  color: var(--clash-yellow);
+    color: var(--clash-yellow);
   border-radius: var(--border-radius-md);
-  font-weight: bold;
-  cursor: pointer;
-  border-color: transparent;
+    font-weight: bold;
+    cursor: pointer;
+    border-color: transparent;
   background-color: transparent;
   color: transparent;
   box-shadow: none;
@@ -617,4 +617,15 @@ body {
     transform: translate(150px, 80vh) rotate(360deg);
     opacity: 0;
   }
+  }
+
+/* Logo reset animation */
+@keyframes logoReset {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.logo-reset {
+    animation: logoReset 0.5s var(--transition-timing);
 }
