@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Montserrat&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
 
 :root {
   /* Colors */
@@ -107,6 +107,11 @@
 .modal {
   background-color: transparent;
 
+}
+
+.question.unanswered.ai {
+	background: #25ce95;
+	font-family: monospace;
 }
 
 .gameboard {
@@ -520,6 +525,7 @@ body {
 
 /* Emoji styling */
 .emoji-container {
+  font-family: 'Noto Color Emoji', sans-serif;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -531,6 +537,7 @@ body {
 }
 
 .emoji-buttons {
+  font-family: 'Noto Color Emoji', sans-serif;
   display: flex;
   justify-content: center;
   gap: 1em;
@@ -538,6 +545,7 @@ body {
 }
 
 .emoji-button {
+  font-family: 'Noto Color Emoji', sans-serif;
   width: var(--emoji-button-size);
   height: var(--emoji-button-size);
   border-radius: 50%;

@@ -185,11 +185,15 @@ $(function(){
                         }
                         
                         currentAnswerTypingTimeout = setTimeout(typeAnswerText, 100);
+                    } else {
+                        handleAnswer();
                     }
                 }
                 
                 typeNextAnswer();
             }
+
+            
 
             // Clean up animation when modal is closed
             $('#question-modal').on('hidden.bs.modal', function() {
@@ -204,6 +208,8 @@ $(function(){
                 // Remove the event listener to prevent memory leaks
                 $(this).off('hidden.bs.modal');
             });
+
+            handleAnswer();
         } else {
             // Regular question
             $('#question').empty().text(questionText);
@@ -286,7 +292,6 @@ $(function(){
         $('#question-modal').modal('show');
         console.log(category, question);
         console.log(map[category].questions[question]);
-        handleAnswer();
     });
 
 });
@@ -320,7 +325,14 @@ function loadBoard(){
         var column = $('#cat-'+i);
         $.each(category.questions, function(n,question){
             //add questions with points wrapped in a span
-            column.append('<div class="well question unanswered" data-question="'+n+'"><span class="points">'+question.value+'</span></div>')
+            var question_class = 'well question unanswered';
+            if (question.types.includes('interactive')){
+                question_class += ' interactive';
+            }
+            if (question.types.includes('ai')){
+                question_class += ' ai';
+            }
+            column.append('<div class="'+question_class+'" data-question="'+n+'"><span class="points">'+question.value+'</span></div>')
         });
     });
     $('.panel-heading').append('<div class="clearfix"></div>')

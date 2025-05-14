@@ -1,372 +1,193 @@
 [
     {
-        "name": "Studi-Lifestyle",
+        "name": "Campus-Cringe",
         "questions": [
             {
                 "value": 10,
-                "question": "Wie viel Prozent der Studierenden sind verheiratet?",
-                "types": ["interactive"],
+                "question": "Was ist das Maskottchen der Universität Siegen?",
+                "types": [],
                 "answers": [
-                    {
-                        "text": "A) 5,5 %",
-                        "correct": false
-                    },
-                    {
-                        "text": "B) 12,4 %",
-                        "correct": false
-                    },
-                    {
-                        "text": "C) 9,8 %",
-                        "correct": false
-                    },
-                    {
-                        "text": "D) 13,2 %",
-                        "correct": false
-                    }
+                    { "text": "ein Löwe namens Siegfried", "correct": false },
+                    { "text": "ein Bison namens Siggi", "correct": true },
+                    { "text": "ein Uhu namens Sieglinde", "correct": false },
+                    { "text": "ein Dachs namens Sigrid", "correct": false }
                 ]
             },
             {
                 "value": 20,
-                "question": "Welches Fach studiert ein Langzeitstudent an der Uni Kiel im 100. Semester?",
+                "question": "Was bezeichnet der Begriff „Karzer“ an historischen Universitäten wie der Uni Freiburg?",
                 "types": [],
                 "answers": [
-                    {
-                        "text": "A) Germanistik (auf Lehramt)",
-                        "correct": false
-                    },
-                    {
-                        "text": "B) Medizin",
-                        "correct": true
-                    },
-                    {
-                        "text": "C) Soziologie",
-                        "correct": false
-                    },
-                    {
-                        "text": "D) Theoretische Physik",
-                        "correct": false
-                    }
+                    { "text": "Einen speziellen Hörsaal für medizinische Abschlussprüfungen", "correct": false },
+                    { "text": "Eine Aussichtsplattform auf dem Turm der Universitätskapelle", "correct": false },
+                    { "text": "Einen Raum für Versammlungen studentischer Geheimbünde", "correct": false },
+                    { "text": "Ein Gefängnis für Studierende, die gegen Universitäts-Regeln verstoßen", "correct": true }
                 ]
             },
             {
                 "value": 30,
-                "question": "Wie viele Formblätter gibt es für den BAFÖG Antrag und wie viele Seiten haben diese zusammengerechnet?",
-                "types": [],
+                "question": "Was ist euch eventuell auch schon mal während des Studiums passiert?",
+                "types": ["interactive"],
                 "answers": [
-                    {
-                        "text": "A) 9 Formblätter und 31 Seiten",
-                        "correct": true
-                    },
-                    {
-                        "text": "B) 6 Formblätter und 17 Seiten",
-                        "correct": false
-                    },
-                    {
-                        "text": "C) 12 Formblätter und 45 Seiten",
-                        "correct": false
-                    },
-                    {
-                        "text": "D) 6 Formblätter und 25 Seiten",
-                        "correct": false
-                    }
+                    { "text": "den Studi-Ausweis verloren (gerne auch mehrfach)", "correct": false },
+                    { "text": "im Hörsaal klatschen, wenn alle anderen klopfen", "correct": false },
+                    { "text": "die Prüfungsanmeldung verpasst", "correct": false },
+                    { "text": "aus Versehen in der falschen Veranstaltung gelandet", "correct": false }
                 ]
             }
         ]
     },
     {
-        "name": "Seminar (Hybrid)",
+        "name": "Prompt oder Flop?",
         "questions": [
             {
                 "value": 10,
-                "question": "Welches Studienfach hat die zweitmeisten Studierende in Deutschland?",
+                "question": "Was bezeichnet man in der KI als 'Zero-Shot Learning'?",
                 "types": [],
                 "answers": [
-                    {
-                        "text": "A) Informatik",
-                        "correct": true
-                    },
-                    {
-                        "text": "B) Rechtswissenschaft",
-                        "correct": false
-                    },
-                    {
-                        "text": "C) Betriebswirtschaftslehre",
-                        "correct": false
-                    },
-                    {
-                        "text": "D) Psychologie",
-                        "correct": false
-                    }
+                    { "text": "das Training eines Modells ohne jegliche Daten", "correct": false },
+                    { "text": "die Fähigkeit eines Modells, Aufgaben ohne vorherige Beispiele zu lösen", "correct": true },
+                    { "text": "ein Modell, das nur mit Bildern arbeitet", "correct": false },
+                    { "text": "ein Modell, das nicht mit User:innen kommuniziert", "correct": false }
                 ]
             },
             {
                 "value": 20,
-                "question": "Was war der Guiness World Record im Jahr 2002 für die längste Vorlesung der Welt?",
+                "question": "Welcher Verlag veröffentlichte 2019 das erste vollständig KI-generierte akademische Buch?",
                 "types": [],
                 "answers": [
-                    {
-                        "text": "A) Universität Duisburg-Essen mit 32 Stunden",
-                        "correct": false
-                    },
-                    {
-                        "text": "B) Goethe-Universität Frankfurt mit 50 Stunden",
-                        "correct": false
-                    },
-                    {
-                        "text": "C) Fachhochschule Trier mit 52 Stunden",
-                        "correct": true
-                    },
-                    {
-                        "text": "D) Freie Universität Berlin mit 75 Stunden",
-                        "correct": false
-                    }
+                    { "text": "Springer Nature, zu Lithium-Ionen-Batterien", "correct": true },
+                    { "text": "Elsevier, zu Krebsforschung", "correct": false },
+                    { "text": "Taylor & Francis, zu Quantencomputing", "correct": false },
+                    { "text": "Wiley, zu Klimawandel und nachhaltiger Entwicklung", "correct": false }
                 ]
             },
             {
                 "value": 30,
-                "question": "Welche Seminarbezeichnung ist nicht frei erfunden?",
-                "types": [],
+                "question": "Wann hast du das letzte Mal eine KI genutzt?",
+                "types": ["interactive"],
                 "answers": [
-                    {
-                        "text": "A) 'Die platte Lust : mein Herr : ist nicht des Faustens Sache': Goethes literarisches Lieben und Leben",
-                        "correct": false
-                    },
-                    {
-                        "text": "B) Von Tinte zu Bytes: Die Evolution des Schreibens im digitalen Zeitalter",
-                        "correct": false
-                    },
-                    {
-                        "text": "C) Zwischen Pornorap und Hollywoodkitsch - Darstellung von Liebe in Literatur und Film in den Nullerjahren",
-                        "correct": true
-                    },
-                    {
-                        "text": "D) She's the Man: Die subversive Darstellung von Geschlecht in Coming-of-Age-Komödien der frühen 2000er",
-                        "correct": false
-                    }
+                    { "text": "in der letzten Stunde", "correct": false },
+                    { "text": "in den letzten 24 Stunden", "correct": false },
+                    { "text": "letzte Woche", "correct": false },
+                    { "text": "Puhh, ich kann mich grad echt nicht erinnern.", "correct": false }
                 ]
             }
         ]
     },
     {
-        "name": "Mensa",
+        "name": "Buzzword Bash",
         "questions": [
             {
                 "value": 10,
-                "question": "Wie viele der Studierende nutzen durchschnittlich die Mensa mindestens einmal in der Woche?",
-                "types": ["interactive"],
+                "question": "Was ist ein Beispiel für “unbundling” im Hochschulkontext?",
+                "types": [],
                 "answers": [
-                    {
-                        "text": "A) 54,4 %",
-                        "correct": true
-                    },
-                    {
-                        "text": "B) 60,5 %",
-                        "correct": false
-                    },
-                    {
-                        "text": "C) 39,3 %",
-                        "correct": false
-                    },
-                    {
-                        "text": "D) 76,2 %",
-                        "correct": false
-                    }
+                    { "text": "modulare Online-Kurse von Drittanbietern", "correct": true },
+                    { "text": "die Verteilung von Hochschulgebäuden über eine gesamte Stadt", "correct": false },
+                    { "text": "die individualisierte Stundenplanerstellung über eine App", "correct": false },
+                    { "text": "die Auflösung einer Fakultät", "correct": false }
                 ]
             },
             {
                 "value": 20,
-                "question": "Welche Universität hatte einen eigenen Online-Burgergenerator, in dem man seinen eigenen Burger zusammenstellen konnte?",
-                "types": ["interactive"],
+                "question": "Was ist ein realer Begriff aus dem Bereich der Bildungspsychologie?",
+                "types": [],
                 "answers": [
-                    {
-                        "text": "A) Universität der Künste Berlin",
-                        "correct": false
-                    },
-                    {
-                        "text": "B) Universität Trier",
-                        "correct": true
-                    },
-                    {
-                        "text": "C) Universität zu Köln",
-                        "correct": false
-                    },
-                    {
-                        "text": "D) LMU München",
-                        "correct": false
-                    }
+                    { "text": "Studyvolution", "correct": false },
+                    { "text": "Eduflipping", "correct": false },
+                    { "text": "Learnification", "correct": true },
+                    { "text": "Brainboosting", "correct": false }
                 ]
             },
             {
                 "value": 30,
-                "question": "Welches Mensa Gericht wird tatsächlich an einer deutschen Hochschule serviert?",
-                "types": [],
+                "question": "Was ist dein liebstes Buzzword aus der Hochschulwelt?",
+                "types": ["interactive"],
                 "answers": [
-                    {
-                        "text": "A) Kürbisrisotto mit veganem Ziegenkäse und karamellisierten Haselnüssen",
-                        "correct": false
-                    },
-                    {
-                        "text": "B) Rote-Bete-Brownies mit Meerrettich-Walnuss-Sahne",
-                        "correct": false
-                    },
-                    {
-                        "text": "C) glutenfreie Süßkartoffel-Waffeln mit Ahornsirup und Bacon",
-                        "correct": false
-                    },
-                    {
-                        "text": "D) Shepherd's Pie aus Sonnenblumenhack, dazu Karottensalat mit Haselnüssen und Orangenmarinade",
-                        "correct": true
-                    }
+                    { "text": "Life-long Learning", "correct": false },
+                    { "text": "Edupreneurship", "correct": false },
+                    { "text": "Student Life Cycle Management", "correct": false },
+                    { "text": "Employability", "correct": false }
                 ]
             }
         ]
     },
     {
-        "name": "Vorlesungsverzeichnis",
+        "name": "Around the Uni-verse",
         "questions": [
             {
                 "value": 10,
-                "question": "Was ist die Hauptmotivation der Studierenden für die Wahl ihrer Hochschule?",
+                "question": "Wie lautet das Motto der kanadischen McGill University?",
+                "types": [],
+                "answers": [
+                    { "text": "Provehito in Altum (Launch forth into the deep)", "correct": false },
+                    { "text": "In pulvere vinces (In dust, you conquer)", "correct": false },
+                    { "text": "Grandescunt aucta labore (By work, all things increase and grow)", "correct": true },
+                    { "text": "Veritas et Utilitas (Truth and usefulness)", "correct": false }
+                ]
+            },
+            {
+                "value": 20,
+                "question": "Was bräuchte es auf eurem Traum-Campus unbedingt?",
+                "types": ["interactive"],
+                "answers": [
+                    { "text": "eine Caféteria mit All-you-can-drink-Kaffee-Flatrate", "correct": false },
+                    { "text": "Joker in den Prüfungen", "correct": false },
+                    { "text": "Seminare mit Therapie-Hunden", "correct": false },
+                    { "text": "eine Uni-Bar", "correct": false }
+                ]
+            },
+            {
+                "value": 30,
+                "question": "Welcher dieser Studiengänge wird tatsächlich an einer Hochschule angeboten?",
+                "types": [],
+                "answers": [
+                    { "text": "Bachelor in Influencer-Ökonomie (University of Miami)", "correct": false },
+                    { "text": "Master in Männlichkeitsstudien (Stone Brook University New York)", "correct": true },
+                    { "text": "Bachelor in Duftmarketing (Sapienza Università di Roma)", "correct": false },
+                    { "text": "Master in Rosenzucht (Université de Franche-Comté)", "correct": false }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "OracleGPT 2030",
+        "questions": [
+            {
+                "value": 10,
+                "question": "Welche Maßnahme wurde 2028 an mehreren deutschen Hochschulen eingeführt, um 'Zoom-Müdigkeit' entgegenzuwirken?",
                 "types": ["ai"],
                 "answers": [
-                    {
-                        "text": "A) Attraktivität von Stadt und Umgebung",
-                        "correct": false
-                    },
-                    {
-                        "text": "B) Tradition und Ruf der Hochschule",
-                        "correct": false
-                    },
-                    {
-                        "text": "C) Nähe zu Familie und Freund:innen",
-                        "correct": false
-                    },
-                    {
-                        "text": "D) Gewünschte Fachrichtung",
-                        "correct": true
-                    }
+                    { "text": "Einführung von Offline-Freitagen", "correct": true },
+                    { "text": "Vorlesungen mit Laufbandpflicht", "correct": false },
+                    { "text": "Powernaps im Lehrplan verankert", "correct": false },
+                    { "text": "nur noch Emojis als Prüfungsantworten erlaubt", "correct": false }
                 ]
             },
             {
                 "value": 20,
-                "question": "Welchen Studiengang gibt es nicht?",
-                "types": [],
+                "question": "Was war 2027 das beliebteste Studienfach weltweit – gemessen an Einschreibungen auf internationalen Plattformen?",
+                "types": ["ai"],
                 "answers": [
-                    {
-                        "text": "A) Space Master (Uni Würzburg)",
-                        "correct": false
-                    },
-                    {
-                        "text": "B) Körperpflege (TU Darmstadt)",
-                        "correct": false
-                    },
-                    {
-                        "text": "C) Angewandte Freizeitwissenschaft (HS Bremen)",
-                        "correct": false
-                    },
-                    {
-                        "text": "D) Tiefsee Agrartechnik (FH Kiel)",
-                        "correct": true
-                    }
+                    { "text": "Sustainable Memes & Culture", "correct": false },
+                    { "text": "Influencer-Wissenschaften", "correct": false },
+                    { "text": "Interplanetare Agrarökonomie", "correct": false },
+                    { "text": "KI-Ethik", "correct": true }
                 ]
             },
             {
                 "value": 30,
-                "question": "Wie hoch ist der durchschnittliche wöchentliche Zeitaufwand für das Studium?",
-                "types": [],
+                "question": "Was war 2026 das meistgenutzte neue Studien-Tool an europäischen Universitäten?",
+                "types": ["ai"],
                 "answers": [
-                    {
-                        "text": "A) 20,2 Stunden",
-                        "correct": false
-                    },
-                    {
-                        "text": "B) 34,6 Stunden",
-                        "correct": true
-                    },
-                    {
-                        "text": "C) 39,3 Stunden",
-                        "correct": false
-                    },
-                    {
-                        "text": "D) 28,8 Stunden",
-                        "correct": false
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "name": "Prüfungsamt",
-        "questions": [
-            {
-                "value": 10,
-                "question": "Was war die kürzeste jemals abgegebene Doktorarbeit?",
-                "types": [],
-                "answers": [
-                    {
-                        "text": "A) 1,5 Seiten",
-                        "correct": false
-                    },
-                    {
-                        "text": "B) 3 Seiten",
-                        "correct": true
-                    },
-                    {
-                        "text": "C) 6 Seiten",
-                        "correct": false
-                    },
-                    {
-                        "text": "D) 8 Seiten",
-                        "correct": false
-                    }
-                ]
-            },
-            {
-                "value": 20,
-                "question": "Welche Abschlussarbeit gab es wirklich?",
-                "types": [],
-                "answers": [
-                    {
-                        "text": "A) \"Die Simpsons, Springfield und die USA. Was wirklich hinter der gelben Kleinstadt steckt.\"",
-                        "correct": true
-                    },
-                    {
-                        "text": "B) \"Von Gotham bis Metropolis: Die Architektur fiktiver Städte und ihre Einflüsse auf die moderne Stadtplanung.\"",
-                        "correct": false
-                    },
-                    {
-                        "text": "C) \"Harry Potter und die Kammer der Wirtschaft: Eine makroökonomische Analyse.\"",
-                        "correct": false
-                    },
-                    {
-                        "text": "D) \"Game of Thrones: Die politischen Strategien von Westeros und ihre Parallelen in der weltgeschichtlichen Entwicklung nach 1800.\"",
-                        "correct": false
-                    }
-                ]
-            },
-            {
-                "value": 30,
-                "question": "Welche Verordnung / Satzung / Anweisung ist frei erfunden?",
-                "types": [],
-                "answers": [
-                    {
-                        "text": "A) Richtlinien für den Umgang mit \"KI-basierten\" Sprachmodellen/Textgeneratoren in der philosophischen Fakultät der Universität Siegen",
-                        "correct": false
-                    },
-                    {
-                        "text": "B) Richtlinie der Johann Wolfgang Goethe Universität für die Errichtung eines Tierschutzausschusses nach §6 der Tierschutz-Versuchstierverordnung",
-                        "correct": false
-                    },
-                    {
-                        "text": "C) Strahlenschutzanweisung für Tätigkeiten in fremden Anlagen und Kontrollbereichen von der Universität Konstanz",
-                        "correct": false
-                    },
-                    {
-                        "text": "D) Richtlinie der Ludwig-Maximilians-Universität München zur Einhaltung von Datenschutzstandards bei der Nutzung biometrischer Identifikationstechnologien",
-                        "correct": true
-                    }
+                    { "text": "Essayfy – ein Tool, das Hausarbeiten automatisch in PowerPoint-Präsentationen verwandelt", "correct": false },
+                    { "text": "FocusPal – ein Gerät, das Töne abgibt, wenn Studierende gedanklich abschweifen", "correct": false },
+                    { "text": "LectureGPT - generiert aus Audiodaten automatisch prüfungsrelevante Fragen ", "correct": true },
+                    { "text": "BreakBuddy - ein KI-Coach, der Pausenzeiten plant und mitmacht", "correct": false }
                 ]
             }
         ]
     }
 ]
+
